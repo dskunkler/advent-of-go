@@ -5,8 +5,11 @@ import (
 	"cmp"
 	"fmt"
 	"os"
+	"regexp"
+	"strconv"
 	"strings"
 )
+
 
 func Demo() {
 	fmt.Println("good job")
@@ -73,4 +76,29 @@ func IsNotNumberOrDot(r byte) bool {
 func IsLeftRightOfLine(line string, left int, right int )bool{
 	if (left > 0 && IsNotNumberOrDot(line[left-1])) || (right < len(line)-1 &&  IsNotNumberOrDot(line[right])) {			return true}
 	return false
+}
+
+func NumberArrayFromString(line string)([]int, error) {
+	digitRe:= regexp.MustCompile(`(-)?(\d+)`)
+	strDigits := digitRe.FindAllString(line,-1)
+	digits := make([]int,0)
+	for _,s :=range strDigits {
+		n,e :=strconv.Atoi(s)
+		if e != nil {
+			return digits,fmt.Errorf("Tried to convert not digit")
+		}
+		digits = append(digits,n )
+	}
+	return digits, nil
+}
+
+func GCD (a,b int)int {
+	for a!=b {
+		if a > b {
+			a -=b
+		} else {
+			b-=a
+		}
+	}
+	return a
 }
