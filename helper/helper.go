@@ -102,3 +102,24 @@ func GCD (a,b int)int {
 	}
 	return a
 }
+
+func BytesFromStringArray(textLines []string) [][]byte {
+	newArray := make([][]byte,0)
+	for _,line := range textLines {
+		tempLine:= make([]byte,0)
+		for i:=0; i < len(line); i++ {
+			tempLine = append(tempLine, line[i])
+		}
+		newArray = append(newArray, tempLine)
+	}
+	return newArray
+}
+
+func PrintByteArray ( lines [][]byte ) {
+	for _, line := range lines {
+		for _, b:= range line {
+			fmt.Print(string(b), " ")
+		}
+		fmt.Println()
+	}
+}
