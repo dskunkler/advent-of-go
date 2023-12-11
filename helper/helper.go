@@ -123,3 +123,15 @@ func PrintByteArray ( lines [][]byte ) {
 		fmt.Println()
 	}
 }
+
+func CopyTwoDBytesArray(lines [][]byte) [][]byte {
+	lineCopy := make([][]byte,0)
+	for _,line := range lines {
+		tempLine := make([]byte,0)
+		for _, l := range line {
+			tempLine = append(tempLine, l)
+		}
+		lineCopy = append(lineCopy, tempLine)
+	}
+	return lineCopy
+}
