@@ -14,10 +14,10 @@ var directions =map[byte][2][2]int {
 	'F':  {{1,0}, {0,1}},
 }
 
-func Part1() {
+func Part1() [][]byte{
 	textLines := helper.ArrayFromFileLines()
 	byteLines := helper.BytesFromStringArray(textLines)
-	fmt.Println(textLines)
+	// fmt.Println(textLines)
 	sol := 0
 	startPos:= make([]int,0)
 	// find start
@@ -30,7 +30,7 @@ func Part1() {
 			}
 		}
 	}
-	fmt.Println("startpos", startPos)
+	// fmt.Println("startpos", startPos)
 	// Add directions to queue
 	queue:= make([][2]int,0)
 	if startPos[0] > 0 {
@@ -75,7 +75,7 @@ func Part1() {
 			queue = append(queue, left)
 		}
 	 }
-	 fmt.Println("start q", queue)
+	//  fmt.Println("start q", queue)
 	// bfs from start
 	byteLines[startPos[0]][startPos[1]] = '*'
 
@@ -123,7 +123,7 @@ func Part1() {
 
 			// If the directions are both seen,  exit
 			if byteLines[x+dir1[0][0]][y +dir1[0][1]] == '*' && byteLines[x + dir1[1][0]][y +dir1[1][1]] == '*' {
-				fmt.Println("found from both sides")
+				// fmt.Println("found from both sides")
 				sol = depth
 				queue = make([][2]int, 0)
 				break
@@ -142,9 +142,10 @@ func Part1() {
 			queue = append(queue, newPos2)
 		}
 	}
-	helper.PrintByteArray(byteLines)
+	// helper.PrintByteArray(byteLines)
 
 	fmt.Println(sol)
+	return byteLines
 }
 
 func markXforPos(lines[][]byte,lineCopy[][]byte,currX,currY, x,y int) ([][]byte,int) {
@@ -161,7 +162,7 @@ func markXforPos(lines[][]byte,lineCopy[][]byte,currX,currY, x,y int) ([][]byte,
 							tiles+=1
 							lines[x+1][y] ='X'
 						}
-					}
+					}	
 				} else {
 					// were coming from the right, looking above
 					if x -1 >=0 {
@@ -477,4 +478,41 @@ fmt.Println("new queue", queue)
 
 
 	fmt.Println(sol)
+}
+
+func countCrosses(lines [][]byte, searched [][]byte, i, j int) int {
+	if i >= len(lines) || j >=len(lines[0]) {
+		return 0
+	}
+	seen:=0
+	if searched[i][j] == '*' && (lines[i][j]  =='-' || lines[i][j] == 'S' || lines[i][j] == '|' || lines[i][j] == 'J'|| lines[i][j] == 'F') {
+		seen = 1
+	}
+	return seen + countCrosses(lines, searched, i+1, j+1)
+
+}
+
+func Part3() {
+	stringLines := helper.ArrayFromFileLines()
+	byteLines:= helper.BytesFromStringArray(stringLines)
+	searchedLines := Part1()
+	tiles:=0
+	// helper.PrintByteArray(searchedLines)
+	// helper.PrintByteArray(byteLines)
+	for i:=0; i< len(byteLines); i++ {
+		for j:=0;j <len(byteLines[0]); j++ {
+			if searchedLines[i][j] == '*' {
+				continue
+			}
+			linesCrossed := countCrosses(byteLines,searchedLines, i,j)
+			fmt.Println(linesCrossed)
+			if linesCrossed%2 == 1{
+				fmt.Println("Fournd at", i,j)
+				tiles+=1
+				searchedLines[i][j] = 'X'
+			}
+		}
+	}
+	helper.PrintByteArray(searchedLines)
+	fmt.Println(tiles)
 }
