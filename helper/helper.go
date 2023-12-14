@@ -34,6 +34,33 @@ func ArrayFromFileLines() []string {
 		return fileLines
 	}
 
+func SplitFileByEmptyLine() [][]string {
+	filePath := os.Args[1]
+	readFile, err :=os.Open(filePath)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	fileScanner := bufio.NewScanner(readFile)
+	var fileLines [][]string
+	var currLines []string
+	for fileScanner.Scan() {
+		line:= fileScanner.Text()
+		if line == "" {
+			fileLines = append(fileLines, currLines)
+			currLines = []string{}
+		} else {
+			currLines = append(currLines, line)
+		}
+	}
+	if len(currLines) > 0 {
+		fileLines = append(fileLines, currLines)
+	}
+
+	readFile.Close()
+	return fileLines
+}
+
 func Max[T cmp.Ordered](x, y T) T {
   if x > y {
       return x
@@ -134,4 +161,13 @@ func CopyTwoDBytesArray(lines [][]byte) [][]byte {
 		lineCopy = append(lineCopy, tempLine)
 	}
 	return lineCopy
+}
+
+func CopyStringArray(lines []string) []string {
+	copy := []string{}
+	for _, line := range lines {
+		lineCopy :=line 
+		copy = append(copy, lineCopy)
+	}
+	return copy
 }
