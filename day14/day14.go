@@ -133,10 +133,17 @@ func Part1(lines [][]byte) int {
 
 func part2(lines [][]byte) int {
 	line:=lines
+	myMap := make(map[uint64]int)
+	// NOTE: This was just a lucky mistake. Probably would need a hashmap of seen and distance to detect cycle, 
 	for i :=0 ; i <1000; i++ {
 		line = CycleOnce(line)
 		// helper.PrintByteArray(line)
 		// fmt.Println("~~")
+		hash := helper.Hash2dByteArray(line)
+		if myMap[hash] > 0 {
+			fmt.Println("at", i,"hash: ", hash, "found at", myMap[hash])
+		}
+		myMap[hash] = i
 	}
 	return CalculateWeight(line)
 }

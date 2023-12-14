@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"cmp"
 	"fmt"
+	"hash/fnv"
 	"os"
 	"regexp"
 	"strconv"
@@ -170,4 +171,12 @@ func CopyStringArray(lines []string) []string {
 		copy = append(copy, lineCopy)
 	}
 	return copy
+}
+
+func Hash2dByteArray(lines [][]byte) uint64 {
+	hash := fnv.New64a()
+	for _, line := range lines {
+		hash.Write(line)
+	}
+	return hash.Sum64()
 }
