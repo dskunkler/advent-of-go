@@ -142,6 +142,8 @@ func part2(lines [][]byte) int {
 		hash := helper.Hash2dByteArray(line)
 		if myMap[hash] > 0 {
 			fmt.Println("at", i,"hash: ", hash, "found at", myMap[hash])
+			// 1B - i ==  number ran to get the cycle
+			// i = 1B - (1B % i)
 		}
 		myMap[hash] = i
 	}
