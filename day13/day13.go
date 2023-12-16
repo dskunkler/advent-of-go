@@ -67,28 +67,44 @@ func ReverseByte(lines []string, a,b byte, i,j int) (byte, error){
 	return lines[i][j], fmt.Errorf(`wasnt {%w} or {%w} got {%w} instead`, a,b,lines[i][j])
 }
 
-// Need to finish this one still
-// func SummarizeSmudge(linesArray[][]string, horizontalPrice, verticalPrice int) int {
-// 	sum :=0
-// 	for _, lines := range linesArray {
-// 		copy := helper.CopyStringArray(lines)
-// 		for i:=0; i < len(lines); i++ {
-// 			for j:=0; j < len(lines[0]); j++ {
-// 				reversed,err := ReverseByte(copy,'.', '#', i,j)
-// 				if err == nil {
-// 					bytes := []byte(lines[i])
-// 					bytes[j] = reversed
-// 					lines[i] = string(bytes)
-// 					lines = copy
-// 					val := SummarizePattern(lines, horizontalPrice,verticalPrice)
-// 				}
-// 			}
-// 		}
-// 	}
-// }
+// Need to finish this one still  This one still doesnt work
+func SummarizeSmudge(linesArray[][]string, horizontalPrice, verticalPrice int) int {
+	sum :=0
+	for _, lines := range linesArray {
+		copy := helper.CopyStringArray(lines)
+		// go through each image
+		for i:=0; i < len(lines); i++ {
+			for j:=0; j < len(lines[0]); j++ {
+				// Get a swapped the byte 
+				reversed,err := ReverseByte(copy,'.', '#', i,j)
+				if err == nil {
+					// Swap the byte for the position
+					bytes := []byte(copy[i])
+					bytes[j] = reversed
+					copy[i] = string(bytes)
+					for i:= 1; i< len(lines); i++ {
+						horizontalPos, errHor := CheckHorizontalSymmetry(lines,i-1, i )
+						if errHor == nil {
+							sum+= horizontalPos  * horizontalPrice
+						}
+					}
+					for j := 1; j < len(lines[0]); j++{
+						verticalPos , err := CheckVerticalSymmetry(lines, j-1, j)
+						if err == nil {
+							sum += verticalPos * verticalPrice
+						}
+					}
+				}
+			}
+		}
+	}
+	return sum
+}
 
 func main() {
 	textLines := helper.SplitFileByEmptyLine()
 	res :=SummarizePattern(textLines, 100,1)
 	fmt.Println("res=", res)
+	smudge := SummarizeSmudge(textLines, 100,1)
+	fmt.Println("Part2: ", smudge)
 }
