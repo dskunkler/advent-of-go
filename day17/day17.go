@@ -111,14 +111,14 @@ func pq1() int {
 		// If we got the solution, return it
 		// fmt.Println("Current pos", i, j, stepsTaken,dir)
 		// fmt.Println("Curr priority", item.priority)
-		if i == len(stringLines)-1 && j == len(stringLines[0])-1 {
+		if i == len(stringLines)-1 && j == len(stringLines[0])-1 && stepsTaken>=4 {
 			fmt.Println("Adding final", p)
 			return p
 		}
 
 		if dir == "R" {
 			nextPos:= Pos{i, j+1, stepsTaken+1, "R"}
-			if stepsTaken < 3 && j+1 < len(stringLines[0]) && seen[nextPos] < 1{
+			if stepsTaken < 10 && j+1 < len(stringLines[0]) && seen[nextPos] < 1{
 				currVal, _ := strconv.Atoi(string(stringLines[i][j+1]))
 				// fmt.Println("Adding", currVal)
 				newPriority := item.priority + currVal
@@ -128,34 +128,37 @@ func pq1() int {
 				}
 				pq.Push(newRight)
 			}
-			nextPos =  Pos{i-1, j, 1, "U"}
-			if i-1 >=0  && seen[nextPos] <1 {
-				currVal, _ := strconv.Atoi(string(stringLines[i-1][j]))
-				// fmt.Println("Adding", currVal)
-				newPriority := item.priority + currVal
-				newUp := &Item {
+			if stepsTaken >= 4 {
+
+				nextPos =  Pos{i-1, j, 1, "U"}
+				if i-1 >=0  && seen[nextPos] <1 {
+					currVal, _ := strconv.Atoi(string(stringLines[i-1][j]))
+					// fmt.Println("Adding", currVal)
+					newPriority := item.priority + currVal
+					newUp := &Item {
+							priority: newPriority,
+							value:nextPos,
+						}
+					pq.Push(newUp)
+				}
+				nextPos =  Pos{i+1, j, 1, "D"}
+				if i+1 < len(stringLines) && seen[nextPos] < 1 {
+					currVal, _ := strconv.Atoi(string(stringLines[i+1][j]))
+					// fmt.Println("Adding", currVal)
+					newPriority := item.priority + currVal
+	
+					newDown := &Item {
 						priority: newPriority,
 						value:nextPos,
 					}
-				pq.Push(newUp)
-			}
-			nextPos =  Pos{i+1, j, 1, "D"}
-			if i+1 < len(stringLines) && seen[nextPos] < 1 {
-				currVal, _ := strconv.Atoi(string(stringLines[i+1][j]))
-				// fmt.Println("Adding", currVal)
-				newPriority := item.priority + currVal
-
-				newDown := &Item {
-					priority: newPriority,
-					value:nextPos,
+					pq.Push(newDown)
 				}
-				pq.Push(newDown)
 			}
 		}
 		if dir == "D" {
 			// fmt.Println("Going D")
 			nextPos := Pos{i+1, j, stepsTaken+1, "D"}
-			if stepsTaken < 3 && i+1 < len(stringLines) && seen[nextPos] < 1 {	
+			if stepsTaken < 10 && i+1 < len(stringLines) && seen[nextPos] < 1 {	
 				currVal, _ := strconv.Atoi(string(stringLines[i+1][j]))
 				// fmt.Println("Adding", currVal)
 				newPriority := item.priority + currVal
@@ -166,38 +169,40 @@ func pq1() int {
 				}
 				pq.Push(newDown)
 			} 
-			nextPos = Pos{i, j-1,1,"L"}
-			// fmt.Println("Seen? j-1? ", seen[nextPos])
-			if j-1 >=0 && seen[nextPos] < 1 {
-				// fmt.Println("Adding L")
-				currVal, _ := strconv.Atoi(string(stringLines[i][j-1]))
-				// fmt.Println("Adding", currVal)
-				newPriority := item.priority + currVal
-
-				newLeft := &Item {
-					priority: newPriority,
-					value: nextPos,
+			if stepsTaken >= 4 {
+				nextPos = Pos{i, j-1,1,"L"}
+				// fmt.Println("Seen? j-1? ", seen[nextPos])
+				if j-1 >=0 && seen[nextPos] < 1 {
+					// fmt.Println("Adding L")
+					currVal, _ := strconv.Atoi(string(stringLines[i][j-1]))
+					// fmt.Println("Adding", currVal)
+					newPriority := item.priority + currVal
+	
+					newLeft := &Item {
+						priority: newPriority,
+						value: nextPos,
+					}
+					pq.Push(newLeft)
+				} 
+				nextPos = Pos{i, j+1, 1, "R"}
+				// fmt.Println("Seen j+1?", seen[nextPos])
+				if j+1 < len(stringLines[0]) && seen[nextPos] < 1 {
+					// fmt.Println("adding R")
+					currVal, _ := strconv.Atoi(string(stringLines[i][j+1]))
+					// fmt.Println("Adding", currVal)
+					newPriority := item.priority + currVal
+					newRight := &Item {
+						priority: newPriority,
+						value: nextPos,
+					}
+					pq.Push(newRight)
 				}
-				pq.Push(newLeft)
-			} 
-			nextPos = Pos{i, j+1, 1, "R"}
-			// fmt.Println("Seen j+1?", seen[nextPos])
-			if j+1 < len(stringLines[0]) && seen[nextPos] < 1 {
-				// fmt.Println("adding R")
-				currVal, _ := strconv.Atoi(string(stringLines[i][j+1]))
-				// fmt.Println("Adding", currVal)
-				newPriority := item.priority + currVal
-				newRight := &Item {
-					priority: newPriority,
-					value: nextPos,
-				}
-				pq.Push(newRight)
 			}
 		}
 		if dir == "L" {
 			// fmt.Println("Going L")
 			nextPos := Pos{i, j-1,stepsTaken+1,"L"}
-			if stepsTaken < 3 && j-1 >=0 && seen[nextPos] < 1 {
+			if stepsTaken < 10 && j-1 >=0 && seen[nextPos] < 1 {
 				currVal, _ := strconv.Atoi(string(stringLines[i][j-1]))
 				// fmt.Println("Adding", currVal)
 				newPriority := item.priority + currVal
@@ -208,36 +213,38 @@ func pq1() int {
 				}
 				pq.Push(newLeft)
 			}
-			nextPos = Pos{i-1, j, 1, "U"}
-			if i-1 >=0 && seen[nextPos] < 1 {
-				currVal, _ := strconv.Atoi(string(stringLines[i-1][j]))
-				// fmt.Println("Adding", currVal)
-				newPriority := item.priority + currVal
-
-				newUp := &Item {
-					priority: newPriority,
-					value: nextPos,
+			if stepsTaken >=4 {
+				nextPos = Pos{i-1, j, 1, "U"}
+				if i-1 >=0 && seen[nextPos] < 1 {
+					currVal, _ := strconv.Atoi(string(stringLines[i-1][j]))
+					// fmt.Println("Adding", currVal)
+					newPriority := item.priority + currVal
+	
+					newUp := &Item {
+						priority: newPriority,
+						value: nextPos,
+					}
+					pq.Push(newUp)
 				}
-				pq.Push(newUp)
-			}
-			nextPos = Pos{i+1, j, 1, "D"}
-			if i+1 < len(stringLines) && seen[nextPos] < 1 {
-				currVal, _ := strconv.Atoi(string(stringLines[i+1][j]))
-				// fmt.Println("Adding", currVal)
-				newPriority := item.priority + currVal
-
-				newDown := &Item {
-					priority: newPriority,
-					value: nextPos,
+				nextPos = Pos{i+1, j, 1, "D"}
+				if i+1 < len(stringLines) && seen[nextPos] < 1 {
+					currVal, _ := strconv.Atoi(string(stringLines[i+1][j]))
+					// fmt.Println("Adding", currVal)
+					newPriority := item.priority + currVal
+	
+					newDown := &Item {
+						priority: newPriority,
+						value: nextPos,
+					}
+					pq.Push(newDown)
 				}
-				pq.Push(newDown)
 			}
 			
 		}
 		if dir == "U" {
 			// fmt.Println("Going U")
 			nextPos := Pos{i-1, j, stepsTaken+1, "U"}
-			if stepsTaken < 3 && i-1 >= 0 && seen[nextPos] < 1 {
+			if stepsTaken < 10 && i-1 >= 0 && seen[nextPos] < 1 {
 				currVal, _ := strconv.Atoi(string(stringLines[i-1][j]))
 				// fmt.Println("Adding", currVal)
 				newPriority := item.priority + currVal
@@ -248,29 +255,32 @@ func pq1() int {
 				}
 				pq.Push(newUp)
 			}
-			nextPos = Pos{i, j-1,1,"L"}
-			if j-1 >=0 && seen[nextPos] < 1 {
-				currVal, _ := strconv.Atoi(string(stringLines[i][j-1]))
-				// fmt.Println("Adding", currVal)
-				newPriority := item.priority + currVal
+			if stepsTaken >=4 {
 
-				newLeft := &Item {
-				priority: newPriority,
-				value: nextPos,
-				}
-				pq.Push(newLeft)
-			}
-			nextPos = Pos{i, j+1, 1, "R"}
-			if j+1 < len(stringLines[0]) && seen[nextPos] < 1 {
-				currVal, _ := strconv.Atoi(string(stringLines[i][j+1]))
-				// fmt.Println("Adding", currVal)
-				newPriority := item.priority + currVal
-
-				newRight := &Item {
+				nextPos = Pos{i, j-1,1,"L"}
+				if j-1 >=0 && seen[nextPos] < 1 {
+					currVal, _ := strconv.Atoi(string(stringLines[i][j-1]))
+					// fmt.Println("Adding", currVal)
+					newPriority := item.priority + currVal
+	
+					newLeft := &Item {
 					priority: newPriority,
 					value: nextPos,
+					}
+					pq.Push(newLeft)
 				}
-				pq.Push(newRight)
+				nextPos = Pos{i, j+1, 1, "R"}
+				if j+1 < len(stringLines[0]) && seen[nextPos] < 1 {
+					currVal, _ := strconv.Atoi(string(stringLines[i][j+1]))
+					// fmt.Println("Adding", currVal)
+					newPriority := item.priority + currVal
+	
+					newRight := &Item {
+						priority: newPriority,
+						value: nextPos,
+					}
+					pq.Push(newRight)
+				}
 			}
 		}
 
