@@ -180,3 +180,9 @@ func Hash2dByteArray(lines [][]byte) uint64 {
 	}
 	return hash.Sum64()
 }
+
+func PrintStringArray(lines []string) {
+	for _, line:= range lines {
+		fmt.Println(line)
+	}
+}
