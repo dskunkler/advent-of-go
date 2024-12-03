@@ -1,4 +1,4 @@
-package day5
+package main
 
 import (
 	"fmt"
@@ -59,7 +59,7 @@ func Part1() {
 	}
 
 	// For each seed, find its appropriate soil
-// Seed to Soil
+	// Seed to Soil
 	for seed := range seeds {
 		fmt.Println(seed)
 		noMatch:=true
@@ -146,7 +146,7 @@ func Part1() {
 			wToL[currVal] = 1
 		}
 	}
-fmt.Println(wToL)
+	fmt.Println(wToL)
 	// for each light find right temp
 	for currVal,_ := range wToL{
 		noMatch:=true
@@ -167,7 +167,7 @@ fmt.Println(wToL)
 			LToT[currVal] = 1
 		}
 	}
-fmt.Println(LToT)
+	fmt.Println(LToT)
 
 	
 	// for each temp find right humidity
@@ -190,7 +190,7 @@ fmt.Println(LToT)
 			tToH[currVal] = 1
 		}
 	}
-fmt.Println(tToH)
+	fmt.Println(tToH)
 
 	// for each humidity find right loc
 	for currVal,_ := range tToH{
@@ -212,14 +212,14 @@ fmt.Println(tToH)
 			hToL[currVal] = 1
 		}
 	}
-fmt.Println(hToL)
-minVal := math.MaxInt64
-for key,_ :=range hToL {
-	if key < minVal {
-		minVal = key
+	fmt.Println(hToL)
+	minVal := math.MaxInt64
+	for key,_ :=range hToL {
+		if key < minVal {
+			minVal = key
+		}
 	}
-}
-fmt.Println(minVal)
+	fmt.Println(minVal)
 }
 
 func Part2() {
@@ -228,8 +228,8 @@ func Part2() {
 		fmt.Println("woooops")
 		os.Exit(1)
 	}
-	text:=string(content)
-	splitRe:=regexp.MustCompile(`\n\s*\n`)
+	text := string(content)
+	splitRe := regexp.MustCompile(`\n\s*\n`)
 	sections:= splitRe.Split(text,-1)
 
 	// Make maps
@@ -264,7 +264,7 @@ func Part2() {
 	htlLines:=lineRe.FindAllString(htlSection,-1)
 
 	// Add seeds
-	// fmt.Println(sections[1])
+	fmt.Println("~~section", sections[0])
 	digRe := regexp.MustCompile(`(\d+)`)
 	ddRe := regexp.MustCompile(`(\d+) (\d+)`)
 	seedy:= ddRe.FindAllString(sections[0],-1)
@@ -593,11 +593,15 @@ func Part2() {
 
 	 minVal := math.MaxInt64
 	 for _,rng :=range hToL {
-		fmt.Println("rng", rng)
+		// fmt.Println("rng", rng)
 		 if rng[0] < minVal && rng[0] != 0 {
-			fmt.Println("less", rng[0])
+			// fmt.Println("less", rng[0])
 			 minVal = rng[0]
 		 }
 	 }
-	 fmt.Println(minVal)
+	//  fmt.Println(minVal)
+}
+
+func main() {
+	Part2()
 }
