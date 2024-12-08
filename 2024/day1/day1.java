@@ -7,32 +7,30 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class day1 {
-    public static int calculateDistance(ArrayList<Integer> l, ArrayList<Integer> r) {
-      Collections.sort(l);
-      Collections.sort(r);
-      
-      // System.out.println(l);
-      // System.out.println(r);
-      
-      int sol = 0;
-      for (int i = 0; i < l.size(); i++) {
-          sol += Math.abs(l.get(i) - r.get(i));
-      }
-      return sol;
+  public static int calculateDistance(ArrayList<Integer> l, ArrayList<Integer> r) {
+    Collections.sort(l);
+    Collections.sort(r);
+    
+    int sol = 0;
+    for (int i = 0; i < l.size(); i++) {
+        sol += Math.abs(l.get(i) - r.get(i));
     }
+    return sol;
+  }
 
-    public static int caculateSimilarityScore(ArrayList<Integer> l, ArrayList<Integer> r) {
-      Map<Integer, Integer> occurrances = new HashMap<>();
-      int sol = 0;
-      for (int n : r) {
-        occurrances.put(n, occurrances.getOrDefault(n, 0) +1);
-      }
-      for (int n: l) {
-        sol += n * occurrances.getOrDefault(n, 0);
-      }
-      return sol;
+  public static int caculateSimilarityScore(ArrayList<Integer> l, ArrayList<Integer> r) {
+    Map<Integer, Integer> occurrances = new HashMap<>();
+    int sol = 0;
+    for (int n : r) {
+      occurrances.put(n, occurrances.getOrDefault(n, 0) +1);
     }
-    public static void main(String[] args) {
+    for (int n: l) {
+      sol += n * occurrances.getOrDefault(n, 0);
+    }
+    return sol;
+  }
+
+  public static void main(String[] args) {
     try {
       File myObj = new File("day1input.txt");
       ArrayList<Integer> l = new ArrayList<>();
