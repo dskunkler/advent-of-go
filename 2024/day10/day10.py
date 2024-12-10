@@ -25,8 +25,6 @@ def findPeak(seeds, trailMap):
             # print(seedRes)
         print("res from ", (row,col), seedRes[(row,col)])
     return seedRes
-        
-        
 
 def searchForHeigh(currPos, prevPos, trailMap, seen):
     row, col = currPos
@@ -53,12 +51,63 @@ def searchForHeigh(currPos, prevPos, trailMap, seen):
     # print("returning ", canSee)
     return canSee
 
+def findRatedPeaks(seeds, trailMap):
+    seedRes = {}
+    # canSeeFromPos = {}
+    dirs = [(0,1), (1,0), (0,-1), (-1,0)]
+    for row,col in seeds:
+        seen = {}
+        seen[(row,col)] = 0
+        # add to seen
+        #search adjacent square
+        # get how many can go to peak and save that as a result for that square
+        
+        seedRes[(row,col)] = 0
+        print("searching", (row,col))
+        for x,y in dirs:
+            res = searchByRating((row+x, col+y), (row,col), trailMap, seen)
+            # print("res from", (row +x,col + y), res)
+            seedRes[(row,col)] += res
+            # print(seedRes)
+        print("res from ", (row,col), seedRes[(row,col)])
+    return seedRes
+
+
+def searchByRating(currPos, prevPos, trailMap, seen):
+    row, col = currPos
+    prevRow, prevCol = prevPos
+    dirs = [(0,1), (1,0), (0,-1), (-1,0)]
+    # print("curr", currPos)
+    # print("prev", prevPos)
+    if (currPos in seen and seen[(row,col)] == 0) or not 0 <= row < len(trailMap) or not 0 <= col < len(trailMap[0]) or  trailMap[row][col] == '.' or int(trailMap[row][col]) - int(trailMap[prevRow][prevCol]) != 1:
+        # print("oob or . or seen or not good value")
+        print(seen)
+        print("leaving at ", (row,col))
+        # seen.add(currPos)
+        return 0
+    # print("icon = ", trailMap[row][col])
+    if trailMap[row][col] == '9':
+        # print("found at", (row,col))
+        # print("its 9")
+        seen[(currPos)] = 1
+        return 1
+    canSee = 0
+    seen[currPos] = 0
+    for x,y in dirs:
+        toAdd = searchByRating((row+x, col + y), currPos, trailMap, seen)
+        print("tooAdd")
+        seen[currPos] += toAdd
+        # print(seen[currPos])
+        canSee += toAdd
+    # print("returning ", canSee)
+    return canSee
+
 
     
 
 
 def pt1():
-    file = open("2024/day10/day10.txt")
+    file = open("2024/day10/day10test.txt")
     trailMap = [ list(line.strip()) for line in file.readlines()]
     # print(trailMap )
     trailHeads = generateTrailHeads(trailMap)
@@ -72,5 +121,20 @@ def pt1():
         sol += res[key]
     print(sol)
 
+def pt2():
+    file = open("2024/day10/day10.txt")
+    trailMap = [ list(line.strip()) for line in file.readlines()]
+    # print(trailMap )
+    trailHeads = generateTrailHeads(trailMap)
+    print(trailHeads)
+    res = findRatedPeaks(trailHeads, trailMap)
+    print(res)
+    sol = 0
+    for key in res.keys():
+        # print(key)
+        # print(res[key])
+        sol += res[key]
+    print(sol)
+
 if __name__ == '__main__':
-    pt1()
+    pt2()
