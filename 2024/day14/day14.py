@@ -1,5 +1,5 @@
 import re
-
+from PIL import Image
 def calcFinalPos(currX, currY, xVel, yVel, width, height, seconds):
     maxW, maxH = width-1, height-1
     # print("maxw ", maxW)
@@ -34,7 +34,7 @@ def calcMultiple(quad):
     return start
 
 def numNeighbors(row, col, grid):
-    return 0 if not 0<= row < len(grid) or not 0 <= col < len(grid[0]) else grid[row][col]
+    return 0 if not 0<= row < len(grid) or not 0 <= col < len(grid[0]) else 1
 def calcNeighborScore(grid):
     neighbors = [(0,1), (1,1),(1,0),(1,-1),(-1, -1), (0, -1),(-1,0),  (-1,1) ]
     sol = 0
@@ -44,10 +44,17 @@ def calcNeighborScore(grid):
                 for x,y in neighbors:
                     sol += numNeighbors(row+x, col+y, grid)
     return sol
-
-
+def printTree(grid):
+    for line in grid:
+        print(line)
+def visualize(grid):
+    for row in grid:
+        line = ""
+        for r in row:
+            line += '.' if r == 0  else '#'
+        print(line)
 def pt1():
-    file = open("2024/day14/day14.txt")
+    file = open("day14.txt")
     positions = [line.strip() for line in file.readlines()]
     # grid = [[0 for i in range(101)] for j in range(103)]
     # # print(grid)
@@ -61,7 +68,7 @@ def pt1():
         vel = re.findall("(-?\d+),(-?\d+)", split[1])[0]
         robots.append((startingPos, vel))
     sol = (0, 0)
-    for i in range(100000):
+    for i in range(1,100000):
         newGrid = [[0 for i in range(101)] for j in range(103)]
         newRobots = []
         for startingPos, vel in robots:
@@ -71,7 +78,13 @@ def pt1():
             newGrid[loc[1]][loc[0]] +=1
         weight = calcNeighborScore(newGrid)
         currMax = sol[0]
+        # if currMax > weight:
+        #     printTree(newGrid)
+        
         sol = sol if currMax > weight else (weight, i)
+        if weight>currMax:
+            print("time is", i+1)
+            visualize(newGrid)
         print("new sol", sol)
         robots = newRobots
 
